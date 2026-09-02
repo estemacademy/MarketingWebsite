@@ -64,7 +64,7 @@ function shell(opts: { preheader: string; bodyHtml: string }): string {
 										🎓
 									</td>
 									<td style="padding-left:10px;font-family:${FONT_SERIF};font-size:18px;font-weight:700;color:${COLORS.text};">
-										<span style="color:${COLORS.orange};">E</span>STEM Academy
+										ESTEM Academy
 									</td>
 								</tr>
 							</table>
