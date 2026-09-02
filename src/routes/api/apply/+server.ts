@@ -18,9 +18,11 @@ type ApplyPayload = ApplicationDetails & {
 };
 
 async function sendEmail(to: string, subject: string, html: string, text: string) {
-	const { error } = await resend!.emails.send({ from: FROM_EMAIL, to, subject, html, text });
+	const { data, error } = await resend!.emails.send({ from: FROM_EMAIL, to, subject, html, text });
 	if (error) {
 		console.error('Resend email failed', to, subject, error);
+	} else {
+		console.log('Resend email sent', to, subject, data?.id);
 	}
 }
 
