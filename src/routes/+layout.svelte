@@ -38,7 +38,7 @@
 
 <svelte:head>
 	<link rel="icon" href={favicon} />
-	<!-- Google Analytics (GA4) — replace GA_MEASUREMENT_ID in src/lib/config.ts with your real ID -->
+	<!-- Google Analytics (GA4) -->
 	<script async src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}></script>
 	<script>
 		window.dataLayer = window.dataLayer || [];

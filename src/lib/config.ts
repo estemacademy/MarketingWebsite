@@ -6,5 +6,4 @@ export function whatsappUrl(message: string): string {
 
 export const CONTACT_EMAIL = 'info.estemacademy@gmail.com';
 
-// TODO: replace with the real GA4 measurement ID from analytics.google.com (Admin > Data Streams)
-export const GA_MEASUREMENT_ID = 'G-XXXXXXXXXX';
+export const GA_MEASUREMENT_ID = 'G-1P9QNB8WKP';
