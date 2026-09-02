@@ -1,5 +1,4 @@
-// TODO: replace with the real business WhatsApp number (country code, digits only, e.g. '447123456789')
-export const WHATSAPP_NUMBER = '447000000000';
+export const WHATSAPP_NUMBER = '447534151853';
 
 export function whatsappUrl(message: string): string {
 	return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
