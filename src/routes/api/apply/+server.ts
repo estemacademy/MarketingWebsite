@@ -1,4 +1,5 @@
 import { json } from '@sveltejs/kit';
+import { Resend } from 'resend';
 import { env } from '$env/dynamic/private';
 import { CONTACT_EMAIL } from '$lib/config';
 import type { RequestHandler } from './$types';
@@ -10,6 +11,8 @@ const GOOGLE_FORM_ACTION =
 // (e.g. 'ESTEM Academy <bookings@elitestemacademy.co.uk>'). Until then, Resend's
 // shared test address only delivers to the account owner's own inbox.
 const FROM_EMAIL = 'ESTEM Academy <onboarding@resend.dev>';
+
+const resend = env.RESEND_API_KEY ? new Resend(env.RESEND_API_KEY) : null;
 
 type ApplyPayload = {
 	formEntries: Record<string, string[]>;
@@ -23,16 +26,9 @@ type ApplyPayload = {
 };
 
 async function sendEmail(to: string, subject: string, html: string) {
-	const res = await fetch('https://api.resend.com/emails', {
-		method: 'POST',
-		headers: {
-			Authorization: `Bearer ${env.RESEND_API_KEY}`,
-			'Content-Type': 'application/json'
-		},
-		body: JSON.stringify({ from: FROM_EMAIL, to, subject, html })
-	});
-	if (!res.ok) {
-		console.error('Resend email failed', to, subject, await res.text());
+	const { error } = await resend!.emails.send({ from: FROM_EMAIL, to, subject, html });
+	if (error) {
+		console.error('Resend email failed', to, subject, error);
 	}
 }
 
@@ -53,7 +49,7 @@ export const POST: RequestHandler = async ({ request }) => {
 		}).catch((err) => console.error('Google Form submission failed', err))
 	];
 
-	if (env.RESEND_API_KEY) {
+	if (resend) {
 		tasks.push(
 			sendEmail(
 				email,
