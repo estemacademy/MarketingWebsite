@@ -162,6 +162,11 @@
 		}
 	];
 
+	let reviewsTrack: HTMLDivElement | undefined = $state();
+	function scrollReviews(direction: 1 | -1) {
+		reviewsTrack?.scrollBy({ left: direction * 340, behavior: 'smooth' });
+	}
+
 	const reviews = [
 		{
 			quote:
@@ -483,22 +488,49 @@
 
 	<!-- Reviews -->
 	<section class="mx-auto max-w-6xl px-6 py-20">
-		<div class="mx-auto max-w-2xl text-center">
-			<h2 class="text-3xl font-semibold sm:text-4xl" style="font-family: 'Fraunces', serif;">
-				What families are saying
-			</h2>
-		</div>
-		<div class="mt-12 grid gap-6 sm:grid-cols-3">
-			{#each reviews as review}
-				<div class="rounded-3xl border border-[#26324A]/10 bg-white p-6 shadow-sm">
-					<span class="text-[#F4A340]">★★★★★</span>
-					<p class="mt-3 text-[#26324A]/80">"{review.quote}"</p>
-					<p class="mt-4 text-sm font-semibold text-[#26324A]">{review.author}</p>
-					{#if review.context}
-						<p class="text-xs text-[#26324A]/50">{review.context}</p>
-					{/if}
+		<div class="flex flex-col gap-8 lg:flex-row lg:items-center lg:gap-12">
+			<div class="lg:w-64 lg:shrink-0">
+				<h2 class="text-3xl font-semibold sm:text-4xl" style="font-family: 'Fraunces', serif;">
+					What families are saying
+				</h2>
+				<p class="mt-4 text-[#26324A]/70">Real feedback from students and parents we've tutored.</p>
+				<div class="mt-6 flex gap-3">
+					<button
+						type="button"
+						onclick={() => scrollReviews(-1)}
+						aria-label="Previous reviews"
+						class="flex h-11 w-11 items-center justify-center rounded-full border border-[#26324A]/15 bg-white text-[#26324A] transition hover:border-[#26324A]/30"
+					>
+						←
+					</button>
+					<button
+						type="button"
+						onclick={() => scrollReviews(1)}
+						aria-label="Next reviews"
+						class="flex h-11 w-11 items-center justify-center rounded-full border border-[#26324A]/15 bg-white text-[#26324A] transition hover:border-[#26324A]/30"
+					>
+						→
+					</button>
 				</div>
-			{/each}
+			</div>
+
+			<div
+				bind:this={reviewsTrack}
+				class="flex snap-x snap-mandatory gap-6 overflow-x-auto scroll-smooth pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+			>
+				{#each reviews as review}
+					<div
+						class="w-[85vw] max-w-sm shrink-0 snap-start rounded-3xl border border-[#26324A]/10 bg-white p-6 shadow-sm sm:w-80"
+					>
+						<span class="text-[#F4A340]">★★★★★</span>
+						<p class="mt-3 text-[#26324A]/80">"{review.quote}"</p>
+						<p class="mt-4 text-sm font-semibold text-[#26324A]">{review.author}</p>
+						{#if review.context}
+							<p class="text-xs text-[#26324A]/50">{review.context}</p>
+						{/if}
+					</div>
+				{/each}
+			</div>
 		</div>
 	</section>
 
