@@ -40,14 +40,16 @@
 	];
 
 	const yearOptions = [
-		{ value: 'Year 7 (KS3)', label: 'Year 7', sub: 'KS3' },
-		{ value: 'Year 8 (KS3)', label: 'Year 8', sub: 'KS3' },
-		{ value: 'Year 9 (GCSE/iGCSE)', label: 'Year 9', sub: 'GCSE / iGCSE' },
-		{ value: 'Year 10 (GCSE/iGCSE)', label: 'Year 10', sub: 'GCSE / iGCSE' },
-		{ value: 'Year 11 (GCSE/iGCSE)', label: 'Year 11', sub: 'GCSE / iGCSE' }
+		{ value: 'Year 7', label: 'Year 7', sub: 'KS3', needsQualification: false },
+		{ value: 'Year 8', label: 'Year 8', sub: 'KS3', needsQualification: false },
+		{ value: 'Year 9', label: 'Year 9', sub: 'GCSE / iGCSE', needsQualification: true },
+		{ value: 'Year 10', label: 'Year 10', sub: 'GCSE / iGCSE', needsQualification: true },
+		{ value: 'Year 11', label: 'Year 11', sub: 'GCSE / iGCSE', needsQualification: true }
 	];
 
-	const examBoardOptions = ['AQA', 'Edexcel', 'OCR', 'iGCSE', 'Not sure', 'Other'];
+	const qualificationOptions = ['GCSE', 'iGCSE'];
+
+	const examBoardOptions = ['AQA', 'Edexcel', 'OCR', 'Not sure', 'Other'];
 
 	const planOptions = [
 		{
@@ -100,6 +102,7 @@
 
 	let selectedSubjects = $state<string[]>([]);
 	let yearGroup = $state('');
+	let qualificationType = $state('');
 	let examBoard = $state('');
 	let examBoardOther = $state('');
 	let plan = $state('');
@@ -128,7 +131,12 @@
 			: [...preferredDays, value];
 	}
 
-	const step1Valid = $derived(selectedSubjects.length > 0 && yearGroup !== '');
+	const selectedYear = $derived(yearOptions.find((y) => y.value === yearGroup));
+	const step1Valid = $derived(
+		selectedSubjects.length > 0 &&
+			yearGroup !== '' &&
+			(!selectedYear?.needsQualification || qualificationType !== '')
+	);
 	const step2Valid = $derived(
 		examBoard !== '' && (examBoard !== 'Other' || examBoardOther.trim() !== '') && plan !== ''
 	);
@@ -165,7 +173,6 @@
 	}
 
 	const selectedPlan = $derived(planOptions.find((p) => p.value === plan));
-	const selectedYear = $derived(yearOptions.find((y) => y.value === yearGroup));
 
 	async function submitApplication() {
 		submitting = true;
@@ -175,7 +182,10 @@
 			formEntries[name] = formEntries[name] ? [...formEntries[name], value] : [value];
 		};
 
-		addField(ENTRY.yearGroup, yearGroup);
+		const yearGroupWithQualification = selectedYear?.needsQualification
+			? `${yearGroup} (${qualificationType})`
+			: `${yearGroup} (KS3)`;
+		addField(ENTRY.yearGroup, yearGroupWithQualification);
 		selectedSubjects.forEach((s) => addField(ENTRY.subjects, s));
 
 		if (examBoard === 'Other') {
@@ -211,7 +221,7 @@
 					parentName,
 					phone,
 					email,
-					yearGroup: selectedYear?.label ?? yearGroup,
+					yearGroup: yearGroupWithQualification,
 					subjects: selectedSubjects,
 					examBoard: examBoard === 'Other' ? examBoardOther : examBoard,
 					plan: selectedPlan?.label ?? plan
@@ -348,7 +358,10 @@
 							{#each yearOptions as year}
 								<button
 									type="button"
-									onclick={() => (yearGroup = year.value)}
+									onclick={() => {
+										yearGroup = year.value;
+										if (!year.needsQualification) qualificationType = '';
+									}}
 									class={`rounded-2xl border-2 p-3 text-center text-sm font-semibold transition ${
 										yearGroup === year.value
 											? 'border-[#E8623A] bg-[#FEF1EB] text-[#E8623A] ring-2 ring-[#E8623A]'
@@ -360,6 +373,29 @@
 								</button>
 							{/each}
 						</div>
+
+						{#if selectedYear?.needsQualification}
+							<h3 class="mt-8 font-semibold">GCSE or iGCSE?</h3>
+							<p class="mt-1 text-sm text-[#26324A]/60">
+								These are different qualifications, so we tailor lessons differently — pick the one
+								your child is sitting.
+							</p>
+							<div class="mt-3 flex gap-3">
+								{#each qualificationOptions as q}
+									<button
+										type="button"
+										onclick={() => (qualificationType = q)}
+										class={`rounded-full border-2 px-6 py-2.5 text-sm font-semibold transition ${
+											qualificationType === q
+												? 'border-[#E8623A] bg-[#FEF1EB] text-[#E8623A] ring-2 ring-[#E8623A]'
+												: 'border-[#26324A]/10 bg-[#FBF6EC] text-[#26324A]/70 hover:border-[#26324A]/25'
+										}`}
+									>
+										{q}
+									</button>
+								{/each}
+							</div>
+						{/if}
 					{:else if step === 2}
 						<h2 class="text-2xl font-semibold" style="font-family: 'Fraunces', serif;">
 							Exam board & lesson plan
@@ -554,7 +590,11 @@
 						<dl class="mt-6 divide-y divide-[#26324A]/10 rounded-2xl border border-[#26324A]/10 bg-[#FBF6EC] text-sm">
 							<div class="flex justify-between gap-4 p-4">
 								<dt class="text-[#26324A]/60">Year group</dt>
-								<dd class="font-medium">{selectedYear?.label ?? '—'}</dd>
+								<dd class="font-medium">
+									{selectedYear?.label ?? '—'}{selectedYear?.needsQualification && qualificationType
+										? ` (${qualificationType})`
+										: ''}
+								</dd>
 							</div>
 							<div class="flex justify-between gap-4 p-4">
 								<dt class="text-[#26324A]/60">Subjects</dt>
@@ -635,7 +675,12 @@
 						<dl class="mt-4 space-y-4 text-sm">
 							<div>
 								<dt class="text-xs font-bold tracking-wide text-[#26324A]/40 uppercase">Year</dt>
-								<dd class="mt-1 font-medium">{selectedYear?.label ?? 'Not chosen yet'}</dd>
+								<dd class="mt-1 font-medium">
+									{selectedYear?.label ?? 'Not chosen yet'}{selectedYear?.needsQualification &&
+									qualificationType
+										? ` (${qualificationType})`
+										: ''}
+								</dd>
 							</div>
 							<div>
 								<dt class="text-xs font-bold tracking-wide text-[#26324A]/40 uppercase">Subjects</dt>

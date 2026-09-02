@@ -119,6 +119,16 @@
 		subjects.find((s) => s.id === activeSubjectId) ?? subjects[0]
 	);
 
+	const levels = [
+		{ id: 'ks3', label: 'KS3 (Year 7–8)' },
+		{ id: 'gcse', label: 'GCSE (Year 9–11)' },
+		{ id: 'igcse', label: 'iGCSE (Year 9–11)' }
+	] as const;
+	let activeLevelId = $state<(typeof levels)[number]['id']>('ks3');
+	const activeTopics = $derived(
+		activeLevelId === 'ks3' ? activeSubject.ks3 : activeSubject.gcse
+	);
+
 	const pricing = [
 		{
 			name: 'Bulk Package — 20 Lessons',
@@ -340,7 +350,7 @@
 					What will they actually learn?
 				</h2>
 				<p class="mt-4 text-[#26324A]/70">
-					Tap a subject to see exactly what's covered at KS3 and GCSE — for
+					Tap a subject to see exactly what's covered at KS3, GCSE and iGCSE — for
 					{yearGroups.join(', ')}, across {examBoards.join(', ')}.
 				</p>
 			</div>
@@ -377,33 +387,39 @@
 					</div>
 				</div>
 
-				<div class="mt-8 grid gap-8 sm:grid-cols-2">
-					<div>
-						<h4 class="text-sm font-bold tracking-wide text-[#26324A]/50 uppercase">
-							KS3 (Year 7–8)
-						</h4>
-						<ul class="mt-3 space-y-2.5">
-							{#each activeSubject.ks3 as topic}
-								<li class="flex items-start gap-2 text-[#26324A]/80">
-									<span class={`mt-0.5 ${activeSubject.iconText}`}>●</span>
-									{topic}
-								</li>
-							{/each}
-						</ul>
-					</div>
-					<div>
-						<h4 class="text-sm font-bold tracking-wide text-[#26324A]/50 uppercase">
-							GCSE / iGCSE (Year 9–11)
-						</h4>
-						<ul class="mt-3 space-y-2.5">
-							{#each activeSubject.gcse as topic}
-								<li class="flex items-start gap-2 text-[#26324A]/80">
-									<span class={`mt-0.5 ${activeSubject.iconText}`}>●</span>
-									{topic}
-								</li>
-							{/each}
-						</ul>
-					</div>
+				<!-- Level buttons -->
+				<div class="mt-8 flex flex-wrap gap-2">
+					{#each levels as level}
+						<button
+							type="button"
+							onclick={() => (activeLevelId = level.id)}
+							class={`rounded-full border-2 px-4 py-2 text-sm font-semibold transition ${
+								activeLevelId === level.id
+									? `border-transparent ${activeSubject.iconBg} ${activeSubject.iconText}`
+									: 'border-[#26324A]/10 bg-white text-[#26324A]/60 hover:border-[#26324A]/25'
+							}`}
+						>
+							{level.label}
+						</button>
+					{/each}
+				</div>
+
+				{#if activeLevelId === 'igcse'}
+					<p class="mt-4 text-sm text-[#26324A]/60">
+						iGCSE follows the same core {activeSubject.name} curriculum as GCSE — lessons are
+						mapped to your specific board (e.g. Cambridge, Edexcel International).
+					</p>
+				{/if}
+
+				<div class="mt-6">
+					<ul class="space-y-2.5">
+						{#each activeTopics as topic}
+							<li class="flex items-start gap-2 text-[#26324A]/80">
+								<span class={`mt-0.5 ${activeSubject.iconText}`}>●</span>
+								{topic}
+							</li>
+						{/each}
+					</ul>
 				</div>
 			</div>
 		</div>
