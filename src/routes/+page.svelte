@@ -131,16 +131,6 @@
 
 	const pricing = [
 		{
-			name: 'Bulk Package — 20 Lessons',
-			price: '£10',
-			originalPrice: '£12.50',
-			unit: '/ hour',
-			tag: '⭐ Most popular',
-			savings: 'Save £2.50/hour — £50 off across 20 lessons',
-			features: ['Best value per lesson', 'Pay for 20 lessons up front', 'Great for regular weekly tuition'],
-			highlight: true
-		},
-		{
 			name: 'Pay-As-You-Go',
 			price: '£12.50',
 			originalPrice: '',
@@ -149,6 +139,16 @@
 			savings: '',
 			features: ['Live interactive group classes', 'Book lesson by lesson', 'No long-term contract'],
 			highlight: false
+		},
+		{
+			name: 'Bulk Package — 20 Lessons',
+			price: '£10',
+			originalPrice: '£12.50',
+			unit: '/ hour',
+			tag: '⭐ Most popular',
+			savings: 'Save £2.50/hour — £50 off across 20 lessons',
+			features: ['Best value per lesson', 'Pay for 20 lessons up front', 'Great for regular weekly tuition'],
+			highlight: true
 		},
 		{
 			name: '1-to-1 Private Tuition',
@@ -553,7 +553,7 @@
 					<div
 						class={`flex flex-col rounded-3xl border p-8 ${
 							plan.highlight
-								? 'border-[#F4A340] bg-[#FEF6E8] shadow-[0_0_0_4px_rgba(244,163,64,0.15)]'
+								? 'border-[#F4A340] bg-[#FEF6E8] shadow-[0_0_0_4px_rgba(244,163,64,0.15),0_0_50px_-6px_rgba(244,163,64,0.55)] lg:-my-4 lg:scale-105'
 								: 'border-[#26324A]/10 bg-[#FBF6EC]'
 						}`}
 					>
