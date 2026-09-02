@@ -236,6 +236,7 @@
 
 	const tutors = [
 		{
+			name: 'Ibrahim Khan',
 			role: 'Medical Doctor',
 			emoji: '🩺',
 			specialism: 'GCSE & KS3 Biology and Chemistry',
@@ -243,6 +244,7 @@
 			badges: ['GMC Registered', 'Enhanced DBS Checked']
 		},
 		{
+			name: 'Syed Ahmed',
 			role: 'Imperial College Senior Engineer',
 			emoji: '⚙️',
 			specialism: 'GCSE & KS3 Higher-Tier Mathematics and Physics',
@@ -469,8 +471,9 @@
 						>{tutor.emoji}</span
 					>
 					<h3 class="mt-4 text-xl font-semibold" style="font-family: 'Fraunces', serif;">
-						{tutor.role}
+						{tutor.name}
 					</h3>
+					<p class="text-sm font-medium text-[#26324A]/60">{tutor.role}</p>
 					<p class="mt-1 text-sm font-medium text-[#E8623A]">{tutor.specialism}</p>
 					<p class="mt-4 text-[#26324A]/70">{tutor.bio}</p>
 					<div class="mt-6 flex flex-wrap gap-2">
