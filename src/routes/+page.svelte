@@ -164,19 +164,40 @@
 
 	const reviews = [
 		{
-			quote: '[Add a real parent/student review here before publishing]',
-			author: '[Parent/student name]',
-			context: '[Year group & subject]'
+			quote:
+				"Extremely helpful in helping me getting that A*. He pointed out all of my silly mistakes, and was able to go over whole topics in single lessons. Really couldn't have done it without him.",
+			author: 'Najma A',
+			context: 'Maths (A-Level)'
 		},
 		{
-			quote: '[Add a real parent/student review here before publishing]',
-			author: '[Parent/student name]',
-			context: '[Year group & subject]'
+			quote:
+				"Syed has been helping my son for a few months now. What a revelation it has been. I have seen my son grow in confidence and enthusiasm for Maths. Syed is organised, articulate, professional and easy to get along with. I am struggling to find tutors in other subjects that live up to Syed's standards. Don't hesitate, book and you will see.",
+			author: 'Hiba O',
+			context: 'Maths (GCSE)'
 		},
 		{
-			quote: '[Add a real parent/student review here before publishing]',
-			author: '[Parent/student name]',
-			context: '[Year group & subject]'
+			quote:
+				"Before starting lessons with Ibrahim, I didn't know how to apply my knowledge to questions. Through doing many practice questions with Ibrahim, he highlighted exam techniques that helped me answer questions more effectively. He is patient, dedicated, and always ready to answer my questions until I completely understand. Therefore, for these reasons, I strongly recommend him as a tutor.",
+			author: 'Hajara',
+			context: ''
+		},
+		{
+			quote:
+				"My favourite tutor of all time. Before I could only do basic maths but he made me into an excellent mathematician bit by bit, just from him explaining things to me. 10/10 — would recommend to anyone struggling, and he'll keep you on your toes with fun lessons.",
+			author: 'Hassan',
+			context: 'Maths'
+		},
+		{
+			quote:
+				'Is very consistent with teaching, offers unique methods to enhance learning and provides a fun and enjoyable experience.',
+			author: 'Maherub H',
+			context: 'Maths (GCSE)'
+		},
+		{
+			quote:
+				"He is a very good tuition teacher — took me from just passing to an A in just a couple of months before my GCSEs, and often made lessons very easy to understand and open to ask any questions, no matter how silly. He always finishes what's planned for the lesson and won't leave you behind, even if it means giving up his own time after class to make sure I understood. Perfect tuition teacher, and very reasonable and respectable.",
+			author: 'Abdul Khaliq',
+			context: 'GCSE'
 		}
 	];
 
@@ -473,7 +494,9 @@
 					<span class="text-[#F4A340]">★★★★★</span>
 					<p class="mt-3 text-[#26324A]/80">"{review.quote}"</p>
 					<p class="mt-4 text-sm font-semibold text-[#26324A]">{review.author}</p>
-					<p class="text-xs text-[#26324A]/50">{review.context}</p>
+					{#if review.context}
+						<p class="text-xs text-[#26324A]/50">{review.context}</p>
+					{/if}
 				</div>
 			{/each}
 		</div>
