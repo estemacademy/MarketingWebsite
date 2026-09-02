@@ -393,7 +393,7 @@
 					</div>
 					<div>
 						<h4 class="text-sm font-bold tracking-wide text-[#26324A]/50 uppercase">
-							GCSE (Year 9–11)
+							GCSE / iGCSE (Year 9–11)
 						</h4>
 						<ul class="mt-3 space-y-2.5">
 							{#each activeSubject.gcse as topic}

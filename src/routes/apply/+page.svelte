@@ -42,9 +42,9 @@
 	const yearOptions = [
 		{ value: 'Year 7 (KS3)', label: 'Year 7', sub: 'KS3' },
 		{ value: 'Year 8 (KS3)', label: 'Year 8', sub: 'KS3' },
-		{ value: 'Year 9 (GCSE)', label: 'Year 9', sub: 'GCSE' },
-		{ value: 'Year 10 (GCSE)', label: 'Year 10', sub: 'GCSE' },
-		{ value: 'Year 11 (GCSE)', label: 'Year 11', sub: 'GCSE' }
+		{ value: 'Year 9 (GCSE/iGCSE)', label: 'Year 9', sub: 'GCSE / iGCSE' },
+		{ value: 'Year 10 (GCSE/iGCSE)', label: 'Year 10', sub: 'GCSE / iGCSE' },
+		{ value: 'Year 11 (GCSE/iGCSE)', label: 'Year 11', sub: 'GCSE / iGCSE' }
 	];
 
 	const examBoardOptions = ['AQA', 'Edexcel', 'OCR', 'iGCSE', 'Not sure', 'Other'];
