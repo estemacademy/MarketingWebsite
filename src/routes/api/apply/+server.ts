@@ -9,10 +9,7 @@ import type { RequestHandler } from './$types';
 const GOOGLE_FORM_ACTION =
 	'https://docs.google.com/forms/d/e/1FAIpQLSe1AAuvBzS6Fo0CxiBeQu0qnAaPsNG229g5WZzaPyKGtKW4YQ/formResponse';
 
-// TODO: once a sending domain is verified in Resend, switch this to that domain
-// (e.g. 'ESTEM Academy <bookings@elitestemacademy.co.uk>'). Until then, Resend's
-// shared test address only delivers to the account owner's own inbox.
-const FROM_EMAIL = 'ESTEM Academy <onboarding@resend.dev>';
+const FROM_EMAIL = 'ESTEM Academy <bookings@estem-academy.com>';
 
 const resend = env.RESEND_API_KEY ? new Resend(env.RESEND_API_KEY) : null;
 
