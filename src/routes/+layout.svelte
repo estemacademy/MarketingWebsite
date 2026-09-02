@@ -5,7 +5,7 @@
 	import { GA_MEASUREMENT_ID, whatsappUrl } from '$lib/config';
 
 	const CONSULT_WHATSAPP_URL = whatsappUrl(
-		"Hi ESTEM Academy, I'd like to book a free 15-minute consultation call."
+		'Hi, was just on your website and had a few questions, can I arrange a free 15 minute consultation'
 	);
 
 	let { children } = $props();
@@ -85,6 +85,16 @@
 			Or fill out the form
 		</a>
 	</div>
+{:else}
+	<a
+		href={CONSULT_WHATSAPP_URL}
+		target="_blank"
+		rel="noopener noreferrer"
+		aria-label="Chat with us on WhatsApp"
+		class="fixed right-4 bottom-4 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-2xl text-white shadow-lg transition hover:scale-105 hover:bg-[#1fb958] sm:right-6 sm:bottom-6"
+	>
+		💬
+	</a>
 {/if}
 
 <style>
