@@ -1,10 +1,7 @@
 <script lang="ts">
-	import { whatsappUrl, CONTACT_EMAIL } from '$lib/config';
+	import { CONTACT_EMAIL } from '$lib/config';
 
 	const APPLY_URL = '/apply';
-	const CONSULT_WHATSAPP_URL = whatsappUrl(
-		"Hi ESTEM Academy, I'd like to book a free 15-minute consultation call."
-	);
 
 	const yearGroups = ['Year 7', 'Year 8', 'Year 9', 'Year 10', 'Year 11'];
 	const examBoards = ['AQA', 'Edexcel', 'OCR', 'iGCSE', 'and others'];
@@ -317,23 +314,12 @@
 						Find your child's tutor
 					</a>
 					<a
-						href={CONSULT_WHATSAPP_URL}
-						target="_blank"
-						rel="noopener noreferrer"
-						class="flex w-full items-center justify-center gap-2 rounded-full border border-[#25D366]/40 bg-[#25D366]/10 px-8 py-3.5 text-center text-base font-semibold text-[#128C4A] transition hover:bg-[#25D366]/20 sm:w-auto"
-					>
-						💬 Free 15-min consultation on WhatsApp
-					</a>
-					<a
 						href="#subjects"
 						class="w-full rounded-full border border-[#26324A]/20 bg-white px-8 py-3.5 text-center text-base font-semibold text-[#26324A] transition hover:border-[#26324A]/40 sm:w-auto"
 					>
 						See what's taught
 					</a>
 				</div>
-				<p class="mt-4 text-sm text-[#26324A]/50">
-					⭐ Most families choose the 20-lesson bulk package at £10/hour — save £2.50/hour vs pay-as-you-go.
-				</p>
 			</div>
 
 			<!-- Trust strip -->
