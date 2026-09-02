@@ -1,7 +1,4 @@
 <script lang="ts">
-	const GOOGLE_FORM_ACTION =
-		'https://docs.google.com/forms/d/e/1FAIpQLSe1AAuvBzS6Fo0CxiBeQu0qnAaPsNG229g5WZzaPyKGtKW4YQ/formResponse';
-
 	const ENTRY = {
 		yearGroup: 'entry.1873917138',
 		subjects: 'entry.1225967168',
@@ -16,8 +13,7 @@
 		decisionDriverOther: 'entry.1875666525.other_option_response',
 		name: 'entry.350807857',
 		phone: 'entry.1229466483',
-		email: 'entry.2123723539',
-		consent: 'entry.332510322'
+		email: 'entry.2123723539'
 	};
 
 	const subjectOptions = [
@@ -51,21 +47,23 @@
 		{ value: 'Year 11 (GCSE)', label: 'Year 11', sub: 'GCSE' }
 	];
 
-	const examBoardOptions = ['AQA', 'Edexcel', 'OCR', 'Other'];
+	const examBoardOptions = ['AQA', 'Edexcel', 'OCR', 'iGCSE', 'Not sure', 'Other'];
 
 	const planOptions = [
 		{
-			value: 'Group classes – Bulk package 20 lessons (£7.50 per hour) ⭐ Most popular',
+			value: 'Group classes – Bulk package 20 lessons (£10 per hour) ⭐ Most popular',
 			label: 'Bulk Package — 20 Lessons',
-			price: '£7.50',
+			price: '£10',
+			originalPrice: '£12.50',
 			unit: '/ hour',
-			desc: 'Best value — pay for 20 lessons up front',
+			desc: 'Best value — save £2.50/hour vs pay-as-you-go',
 			badge: 'Most popular'
 		},
 		{
-			value: 'Group classes – Pay as you go (£10 per hour)',
+			value: 'Group classes – Pay as you go (£12.50 per hour)',
 			label: 'Pay-As-You-Go',
-			price: '£10',
+			price: '£12.50',
+			originalPrice: '',
 			unit: '/ hour',
 			desc: 'No commitment — book lesson by lesson',
 			badge: ''
@@ -74,14 +72,16 @@
 			value: '1-to-1 lessons (£50 per hour)',
 			label: '1-to-1 Private Tuition',
 			price: '£50',
+			originalPrice: '',
 			unit: '/ hour',
-			desc: "Fully personalised, dedicated tutor time",
+			desc: 'A study plan built around your child, flexible scheduling',
 			badge: ''
 		},
 		{
 			value: 'Not sure yet',
 			label: 'Not sure yet',
 			price: '',
+			originalPrice: '',
 			unit: '',
 			desc: "We'll help you decide on the call",
 			badge: ''
@@ -112,7 +112,6 @@
 	let parentName = $state('');
 	let phone = $state('');
 	let email = $state('');
-	let consent = $state('');
 
 	let submitting = $state(false);
 	let submitted = $state(false);
@@ -140,9 +139,7 @@
 			preferredDays.length > 0
 	);
 	const emailValid = $derived(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email));
-	const step4Valid = $derived(
-		parentName.trim() !== '' && phone.trim() !== '' && emailValid && consent !== ''
-	);
+	const step4Valid = $derived(parentName.trim() !== '' && phone.trim() !== '' && emailValid);
 
 	const canContinue = $derived(
 		step === 1
@@ -170,21 +167,12 @@
 	const selectedPlan = $derived(planOptions.find((p) => p.value === plan));
 	const selectedYear = $derived(yearOptions.find((y) => y.value === yearGroup));
 
-	function submitApplication() {
+	async function submitApplication() {
 		submitting = true;
 
-		const formEl = document.createElement('form');
-		formEl.action = GOOGLE_FORM_ACTION;
-		formEl.method = 'POST';
-		formEl.target = 'hidden_apply_iframe';
-		formEl.style.display = 'none';
-
+		const formEntries: Record<string, string[]> = {};
 		const addField = (name: string, value: string) => {
-			const input = document.createElement('input');
-			input.type = 'hidden';
-			input.name = name;
-			input.value = value;
-			formEl.appendChild(input);
+			formEntries[name] = formEntries[name] ? [...formEntries[name], value] : [value];
 		};
 
 		addField(ENTRY.yearGroup, yearGroup);
@@ -213,17 +201,29 @@
 		addField(ENTRY.name, parentName);
 		addField(ENTRY.phone, phone);
 		addField(ENTRY.email, email);
-		addField(ENTRY.consent, consent);
 
-		document.body.appendChild(formEl);
-		formEl.submit();
-		formEl.remove();
+		try {
+			await fetch('/api/apply', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({
+					formEntries,
+					parentName,
+					phone,
+					email,
+					yearGroup: selectedYear?.label ?? yearGroup,
+					subjects: selectedSubjects,
+					examBoard: examBoard === 'Other' ? examBoardOther : examBoard,
+					plan: selectedPlan?.label ?? plan
+				})
+			});
+		} catch (err) {
+			console.error('Application submission failed', err);
+		}
 
-		setTimeout(() => {
-			submitting = false;
-			submitted = true;
-			scrollTo({ top: 0, behavior: 'smooth' });
-		}, 800);
+		submitting = false;
+		submitted = true;
+		scrollTo({ top: 0, behavior: 'smooth' });
 	}
 </script>
 
@@ -237,8 +237,6 @@
 		rel="stylesheet"
 	/>
 </svelte:head>
-
-<iframe name="hidden_apply_iframe" title="form submission target" class="hidden"></iframe>
 
 <div
 	class="min-h-screen bg-[#FBF6EC] text-[#26324A]"
@@ -418,6 +416,11 @@
 									</div>
 									{#if p.price}
 										<div class="shrink-0 text-right">
+											{#if p.originalPrice}
+												<span class="mr-1 text-sm font-medium text-[#26324A]/40 line-through"
+													>{p.originalPrice}</span
+												>
+											{/if}
 											<span class="text-lg font-bold" style="font-family: 'Fraunces', serif;"
 												>{p.price}</span
 											>
@@ -538,24 +541,6 @@
 								{#if email && !emailValid}
 									<p class="mt-1 text-xs text-[#E8623A]">That doesn't look like a valid email.</p>
 								{/if}
-							</div>
-							<div>
-								<h3 class="text-sm font-semibold">Contact you when classes begin?</h3>
-								<div class="mt-2 flex gap-3">
-									{#each ['Yes', 'No'] as opt}
-										<button
-											type="button"
-											onclick={() => (consent = opt)}
-											class={`rounded-full border-2 px-5 py-2 text-sm font-semibold transition ${
-												consent === opt
-													? 'border-[#E8623A] bg-[#FEF1EB] text-[#E8623A]'
-													: 'border-[#26324A]/10 bg-[#FBF6EC] text-[#26324A]/70 hover:border-[#26324A]/25'
-											}`}
-										>
-											{opt}
-										</button>
-									{/each}
-								</div>
 							</div>
 						</div>
 					{:else if step === 5}

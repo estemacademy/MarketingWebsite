@@ -2,6 +2,11 @@
 	import './layout.css';
 	import favicon from '$lib/assets/favicon.svg';
 	import { page } from '$app/state';
+	import { GA_MEASUREMENT_ID, whatsappUrl } from '$lib/config';
+
+	const CONSULT_WHATSAPP_URL = whatsappUrl(
+		"Hi ESTEM Academy, I'd like to book a free 15-minute consultation call."
+	);
 
 	let { children } = $props();
 
@@ -30,7 +35,19 @@
 	const showPromo = $derived(!dismissed && visible && !page.url.pathname.startsWith('/apply'));
 </script>
 
-<svelte:head><link rel="icon" href={favicon} /></svelte:head>
+<svelte:head>
+	<link rel="icon" href={favicon} />
+	<!-- Google Analytics (GA4) — replace GA_MEASUREMENT_ID in src/lib/config.ts with your real ID -->
+	<script async src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(...args) {
+			window.dataLayer.push(args);
+		}
+		gtag('js', new Date());
+		gtag('config', GA_MEASUREMENT_ID);
+	</script>
+</svelte:head>
 {@render children()}
 
 {#if showPromo}
@@ -54,10 +71,18 @@
 			obligation.
 		</p>
 		<a
-			href="/apply"
-			class="mt-4 flex items-center justify-center rounded-full bg-[#E8623A] px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-[#d2542f]"
+			href={CONSULT_WHATSAPP_URL}
+			target="_blank"
+			rel="noopener noreferrer"
+			class="mt-4 flex items-center justify-center gap-2 rounded-full bg-[#25D366] px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-[#1fb958]"
 		>
-			Book your free call
+			💬 Book on WhatsApp
+		</a>
+		<a
+			href="/apply"
+			class="mt-2 flex items-center justify-center rounded-full border border-[#26324A]/15 px-4 py-2.5 text-sm font-semibold text-[#26324A] transition hover:border-[#26324A]/30"
+		>
+			Or fill out the form
 		</a>
 	</div>
 {/if}

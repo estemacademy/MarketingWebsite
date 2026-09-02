@@ -1,8 +1,13 @@
 <script lang="ts">
+	import { whatsappUrl, CONTACT_EMAIL } from '$lib/config';
+
 	const APPLY_URL = '/apply';
+	const CONSULT_WHATSAPP_URL = whatsappUrl(
+		"Hi ESTEM Academy, I'd like to book a free 15-minute consultation call."
+	);
 
 	const yearGroups = ['Year 7', 'Year 8', 'Year 9', 'Year 10', 'Year 11'];
-	const examBoards = ['AQA', 'Edexcel', 'OCR', 'and others'];
+	const examBoards = ['AQA', 'Edexcel', 'OCR', 'iGCSE', 'and others'];
 
 	type Subject = {
 		id: string;
@@ -120,27 +125,51 @@
 	const pricing = [
 		{
 			name: 'Bulk Package — 20 Lessons',
-			price: '£7.50',
+			price: '£10',
+			originalPrice: '£12.50',
 			unit: '/ hour',
 			tag: '⭐ Most popular',
+			savings: 'Save £2.50/hour — £50 off across 20 lessons',
 			features: ['Best value per lesson', 'Pay for 20 lessons up front', 'Great for regular weekly tuition'],
 			highlight: true
 		},
 		{
 			name: 'Pay-As-You-Go',
-			price: '£10',
+			price: '£12.50',
+			originalPrice: '',
 			unit: '/ hour',
 			tag: 'No commitment',
+			savings: '',
 			features: ['Live interactive group classes', 'Book lesson by lesson', 'No long-term contract'],
 			highlight: false
 		},
 		{
 			name: '1-to-1 Private Tuition',
 			price: '£50',
+			originalPrice: '',
 			unit: '/ hour',
 			tag: 'Fully personalised',
-			features: ['100% of the tutor\'s attention', 'A study plan built around your child', 'Flexible scheduling'],
+			savings: '',
+			features: ['A study plan built around your child', 'Flexible scheduling'],
 			highlight: false
+		}
+	];
+
+	const reviews = [
+		{
+			quote: '[Add a real parent/student review here before publishing]',
+			author: '[Parent/student name]',
+			context: '[Year group & subject]'
+		},
+		{
+			quote: '[Add a real parent/student review here before publishing]',
+			author: '[Parent/student name]',
+			context: '[Year group & subject]'
+		},
+		{
+			quote: '[Add a real parent/student review here before publishing]',
+			author: '[Parent/student name]',
+			context: '[Year group & subject]'
 		}
 	];
 
@@ -221,7 +250,7 @@
 	<title>ESTEM Academy — Live Online KS3 & GCSE Tuition</title>
 	<meta
 		name="description"
-		content="Friendly, expert-led KS3 & GCSE Maths, Biology, Chemistry and Physics tuition, live online across the UK, from £7.50/hour."
+		content="Friendly, expert-led KS3, GCSE and iGCSE Maths, Biology, Chemistry and Physics tuition, live online across the UK, from £10/hour."
 	/>
 	<link rel="preconnect" href="https://fonts.googleapis.com" />
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
@@ -278,7 +307,7 @@
 				</h1>
 				<p class="mt-6 text-lg text-[#26324A]/70 sm:text-xl">
 					Small, live online classes in Maths, Biology, Chemistry and Physics — taught by a
-					GMC-registered doctor and an Imperial College engineer, from just £7.50 an hour.
+					GMC-registered doctor and an Imperial College engineer, from just £10 an hour.
 				</p>
 				<div class="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
 					<a
@@ -288,6 +317,14 @@
 						Find your child's tutor
 					</a>
 					<a
+						href={CONSULT_WHATSAPP_URL}
+						target="_blank"
+						rel="noopener noreferrer"
+						class="flex w-full items-center justify-center gap-2 rounded-full border border-[#25D366]/40 bg-[#25D366]/10 px-8 py-3.5 text-center text-base font-semibold text-[#128C4A] transition hover:bg-[#25D366]/20 sm:w-auto"
+					>
+						💬 Free 15-min consultation on WhatsApp
+					</a>
+					<a
 						href="#subjects"
 						class="w-full rounded-full border border-[#26324A]/20 bg-white px-8 py-3.5 text-center text-base font-semibold text-[#26324A] transition hover:border-[#26324A]/40 sm:w-auto"
 					>
@@ -295,7 +332,7 @@
 					</a>
 				</div>
 				<p class="mt-4 text-sm text-[#26324A]/50">
-					⭐ Most families choose the 20-lesson bulk package at £7.50/hour.
+					⭐ Most families choose the 20-lesson bulk package at £10/hour — save £2.50/hour vs pay-as-you-go.
 				</p>
 			</div>
 
@@ -421,6 +458,25 @@
 		</div>
 	</section>
 
+	<!-- Reviews -->
+	<section class="mx-auto max-w-6xl px-6 py-20">
+		<div class="mx-auto max-w-2xl text-center">
+			<h2 class="text-3xl font-semibold sm:text-4xl" style="font-family: 'Fraunces', serif;">
+				What families are saying
+			</h2>
+		</div>
+		<div class="mt-12 grid gap-6 sm:grid-cols-3">
+			{#each reviews as review}
+				<div class="rounded-3xl border border-[#26324A]/10 bg-white p-6 shadow-sm">
+					<span class="text-[#F4A340]">★★★★★</span>
+					<p class="mt-3 text-[#26324A]/80">"{review.quote}"</p>
+					<p class="mt-4 text-sm font-semibold text-[#26324A]">{review.author}</p>
+					<p class="text-xs text-[#26324A]/50">{review.context}</p>
+				</div>
+			{/each}
+		</div>
+	</section>
+
 	<!-- Pricing -->
 	<section id="pricing" class="border-y border-[#26324A]/10 bg-white py-20">
 		<div class="mx-auto max-w-6xl px-6">
@@ -449,12 +505,18 @@
 						{/if}
 						<h3 class="text-lg font-semibold">{plan.name}</h3>
 						<p class="mt-1 text-sm text-[#26324A]/60">{plan.tag}</p>
-						<p class="mt-6 flex items-baseline gap-1">
+						<p class="mt-6 flex items-baseline gap-2">
+							{#if plan.originalPrice}
+								<span class="text-xl font-medium text-[#26324A]/40 line-through">{plan.originalPrice}</span>
+							{/if}
 							<span class="text-4xl font-bold" style="font-family: 'Fraunces', serif;"
 								>{plan.price}</span
 							>
 							<span class="text-[#26324A]/60">{plan.unit}</span>
 						</p>
+						{#if plan.savings}
+							<p class="mt-1 text-sm font-semibold text-[#3E9C8F]">{plan.savings}</p>
+						{/if}
 						<ul class="mt-6 flex-1 space-y-3 text-sm text-[#26324A]/80">
 							{#each plan.features as feature}
 								<li class="flex items-start gap-2">
@@ -548,9 +610,7 @@
 		>
 			<p>&copy; {new Date().getFullYear()} ESTEM Academy. All rights reserved.</p>
 			<div class="flex gap-6">
-				<a href="mailto:info@elitestemacademy.co.uk" class="hover:text-[#26324A]"
-					>info@elitestemacademy.co.uk</a
-				>
+				<a href={`mailto:${CONTACT_EMAIL}`} class="hover:text-[#26324A]">{CONTACT_EMAIL}</a>
 			</div>
 		</div>
 	</footer>
