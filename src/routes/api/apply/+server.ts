@@ -2,6 +2,8 @@ import { json } from '@sveltejs/kit';
 import { Resend } from 'resend';
 import { env } from '$env/dynamic/private';
 import { CONTACT_EMAIL } from '$lib/config';
+import { parentConfirmationEmail, internalNotificationEmail } from '$lib/server/emailTemplates';
+import type { ApplicationDetails } from '$lib/server/emailTemplates';
 import type { RequestHandler } from './$types';
 
 const GOOGLE_FORM_ACTION =
@@ -14,19 +16,12 @@ const FROM_EMAIL = 'ESTEM Academy <onboarding@resend.dev>';
 
 const resend = env.RESEND_API_KEY ? new Resend(env.RESEND_API_KEY) : null;
 
-type ApplyPayload = {
+type ApplyPayload = ApplicationDetails & {
 	formEntries: Record<string, string[]>;
-	parentName: string;
-	phone: string;
-	email: string;
-	yearGroup: string;
-	subjects: string[];
-	examBoard: string;
-	plan: string;
 };
 
-async function sendEmail(to: string, subject: string, html: string) {
-	const { error } = await resend!.emails.send({ from: FROM_EMAIL, to, subject, html });
+async function sendEmail(to: string, subject: string, html: string, text: string) {
+	const { error } = await resend!.emails.send({ from: FROM_EMAIL, to, subject, html, text });
 	if (error) {
 		console.error('Resend email failed', to, subject, error);
 	}
@@ -50,34 +45,18 @@ export const POST: RequestHandler = async ({ request }) => {
 	];
 
 	if (resend) {
-		tasks.push(
-			sendEmail(
-				email,
-				"You're booked in with ESTEM Academy!",
-				`<p>Hi ${parentName || 'there'},</p>
-				<p>Thanks for signing up with ESTEM Academy. We've received your request for
-				${subjects?.length ? subjects.join(', ') : 'tuition'}${yearGroup ? ` (${yearGroup})` : ''}
-				on the <strong>${plan || 'requested'}</strong> plan.</p>
-				<p>We'll call ${phone || 'you'} within 1 business day to confirm a time for your free
-				15-minute consultation.</p>
-				<p>Talk soon,<br />The ESTEM Academy team</p>`
-			)
-		);
+		const details: ApplicationDetails = { parentName, phone, email, yearGroup, subjects, examBoard, plan };
 
+		const parentEmail = parentConfirmationEmail(details);
+		tasks.push(sendEmail(email, "You're booked in with ESTEM Academy!", parentEmail.html, parentEmail.text));
+
+		const internalEmail = internalNotificationEmail(details);
 		tasks.push(
 			sendEmail(
 				CONTACT_EMAIL,
 				`New application: ${parentName || 'Unknown'}`,
-				`<p>New application received:</p>
-				<ul>
-					<li><strong>Name:</strong> ${parentName}</li>
-					<li><strong>Phone:</strong> ${phone}</li>
-					<li><strong>Email:</strong> ${email}</li>
-					<li><strong>Year group:</strong> ${yearGroup}</li>
-					<li><strong>Subjects:</strong> ${subjects?.join(', ')}</li>
-					<li><strong>Exam board:</strong> ${examBoard}</li>
-					<li><strong>Plan:</strong> ${plan}</li>
-				</ul>`
+				internalEmail.html,
+				internalEmail.text
 			)
 		);
 	} else {
