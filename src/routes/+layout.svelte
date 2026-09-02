@@ -3,6 +3,7 @@
 	import favicon from '$lib/assets/favicon.svg';
 	import { page } from '$app/state';
 	import { GA_MEASUREMENT_ID, whatsappUrl } from '$lib/config';
+	import WhatsAppIcon from '$lib/WhatsAppIcon.svelte';
 
 	const CONSULT_WHATSAPP_URL = whatsappUrl(
 		'Hi, was just on your website and had a few questions, can I arrange a free 15 minute consultation'
@@ -76,7 +77,8 @@
 			rel="noopener noreferrer"
 			class="mt-4 flex items-center justify-center gap-2 rounded-full bg-[#25D366] px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-[#1fb958]"
 		>
-			💬 Book on WhatsApp
+			<WhatsAppIcon size={18} />
+			Book on WhatsApp
 		</a>
 		<a
 			href="/apply"
@@ -91,9 +93,9 @@
 		target="_blank"
 		rel="noopener noreferrer"
 		aria-label="Chat with us on WhatsApp"
-		class="fixed right-4 bottom-4 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-2xl text-white shadow-lg transition hover:scale-105 hover:bg-[#1fb958] sm:right-6 sm:bottom-6"
+		class="fixed right-4 bottom-4 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-lg transition hover:scale-105 hover:bg-[#1fb958] sm:right-6 sm:bottom-6"
 	>
-		💬
+		<WhatsAppIcon size={28} />
 	</a>
 {/if}
 
