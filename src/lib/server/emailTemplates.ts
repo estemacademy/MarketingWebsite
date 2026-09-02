@@ -2,6 +2,8 @@
 // Built with table-based layout and inline styles for broad email-client
 // compatibility (Gmail, Outlook, Apple Mail all strip or mangle plain CSS).
 
+import { whatsappUrl } from '$lib/config';
+
 const COLORS = {
 	bg: '#FBF6EC',
 	card: '#FFFFFF',
@@ -158,8 +160,8 @@ export function parentConfirmationEmail(details: ApplicationDetails): { html: st
 		</tr>
 		<tr>
 			<td style="padding:0 32px 40px;text-align:center;">
-				<a href="mailto:info.estemacademy@gmail.com" style="display:inline-block;background-color:${COLORS.orange};color:#ffffff;font-family:${FONT_SANS};font-size:14px;font-weight:600;text-decoration:none;padding:14px 32px;border-radius:999px;">
-					Questions? Email us
+				<a href="${whatsappUrl("Hi ESTEM Academy, I have a question about my application.")}" style="display:inline-block;background-color:${COLORS.orange};color:#ffffff;font-family:${FONT_SANS};font-size:14px;font-weight:600;text-decoration:none;padding:14px 32px;border-radius:999px;">
+					Questions? WhatsApp us
 				</a>
 			</td>
 		</tr>`;
@@ -184,7 +186,7 @@ What happens next:
 2. We call you for a free 15-minute chat
 3. We confirm a lesson time that works
 
-Questions? Email info.estemacademy@gmail.com
+Questions? WhatsApp us: ${whatsappUrl('Hi ESTEM Academy, I have a question about my application.')}
 
 ESTEM Academy`;
 
