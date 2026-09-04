@@ -457,11 +457,11 @@
 	<section class="mx-auto max-w-6xl px-6 py-20">
 		<div class="mx-auto max-w-2xl text-center">
 			<h2 class="text-3xl font-semibold sm:text-4xl" style="font-family: 'Fraunces', serif;">
-				Meet the tutors — yes, really them
+				Meet the founding tutors
 			</h2>
 			<p class="mt-4 text-[#26324A]/70">
-				No rotating cast of freelance tutors. ESTEM Academy is run by two founders who teach
-				every class themselves.
+				ESTEM Academy was founded by two tutors who teach personally — not a rotating cast of
+				freelancers.
 			</p>
 		</div>
 		<div class="mt-12 grid gap-8 sm:grid-cols-2">
