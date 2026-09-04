@@ -460,8 +460,7 @@
 				Meet the founding tutors
 			</h2>
 			<p class="mt-4 text-[#26324A]/70">
-				ESTEM Academy was founded by two tutors who teach personally — not a rotating cast of
-				freelancers.
+				ESTEM Academy was founded by two tutors who teach personally, every week.
 			</p>
 		</div>
 		<div class="mt-12 grid gap-8 sm:grid-cols-2">
